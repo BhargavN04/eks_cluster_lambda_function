@@ -1,4 +1,4 @@
-name: Docker Image CI
+name: Docker Image CI/CD to ECR
 
 on:
   push:
@@ -6,13 +6,40 @@ on:
   pull_request:
     branches: [ "main" ]
 
+env:
+  AWS_REGION: us-east-1
+  ECR_REPOSITORY: my-ecr-repo-name
+  IMAGE_TAG: ${{ github.sha }}
+
 jobs:
-
-  build:
-
+  build-and-push:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v4
-    - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag my-image-name:$(date +%s)
+    - name: Checkout source code
+      uses: actions/checkout@v4
+
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v4
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ${{ env.AWS_REGION }}
+
+    - name: Login to Amazon ECR
+      id: login-ecr
+      uses: aws-actions/amazon-ecr-login@v2
+
+    - name: Set ECR image URI
+      id: ecr-uri
+      run: echo "ECR_URI=${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPOSITORY }}" >> $GITHUB_ENV
+
+    - name: Build Docker image
+      run: |
+        docker build -t $ECR_URI:${{ env.IMAGE_TAG }} .
+        docker tag $ECR_URI:${{ env.IMAGE_TAG }} $ECR_URI:latest
+
+    - name: Push Docker image to ECR
+      run: |
+        docker push $ECR_URI:${{ env.IMAGE_TAG }}
+        docker push $ECR_URI:latest
