@@ -9,7 +9,7 @@ def run_cmd(cmd):
     return result.stdout.strip()
 
 def lambda_handler(event, context):
-    region = os.environ.get("AWS_REGION", "us-east-1")
+    region = os.environ.get("AWS_REGION", "us-west-1")
     cluster_name = os.environ.get("CLUSTER_NAME","fabulous-pop-mountain")
 
     try:
