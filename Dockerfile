@@ -18,7 +18,7 @@ RUN yum install -y \
 ENV PATH="/usr/local/bin:/root/.local/bin:$PATH"
 
 # Copy the function code
-COPY app.py ${LAMBDA_TASK_ROOT}
+COPY app.py  ${LAMBDA_TASK_ROOT}
 
 # Set the CMD to your handler (file.function)
 CMD ["app.lambda_handler"]
