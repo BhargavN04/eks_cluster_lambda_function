@@ -3,9 +3,17 @@ import subprocess
 import json
 
 def run_cmd(cmd):
-    result = subprocess.run(cmd, shell=True, capture_output=True, text=True)
+    debug_cmd = f"set -x; {cmd}"
+    print(f"\n[DEBUG] Running command:\n{cmd}\n")
+
+    result = subprocess.run(debug_cmd, shell=True, capture_output=True, text=True, executable="/bin/bash")
+
+    print(f"[DEBUG] STDOUT:\n{result.stdout.strip()}")
+    print(f"[DEBUG] STDERR:\n{result.stderr.strip()}")
+
     if result.returncode != 0:
-        raise Exception(f"Command failed: {cmd}\nError: {result.stderr.strip()}")
+        raise Exception(f"[ERROR] Command failed:\n{cmd}\n\nSTDERR:\n{result.stderr.strip()}")
+    
     return result.stdout.strip()
 
 def lambda_handler(event, context):
