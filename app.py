@@ -10,7 +10,7 @@ def run_cmd(cmd):
 
 def lambda_handler(event, context):
     region = os.environ.get("AWS_REGION", "us-east-1")
-    cluster_name = os.environ["CLUSTER_NAME","fabulous-pop-mountain"]
+    cluster_name = os.environ.get("CLUSTER_NAME","fabulous-pop-mountain")
 
     try:
         # Set up kubeconfig
