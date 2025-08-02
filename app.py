@@ -15,7 +15,7 @@ def lambda_handler(event, context):
     try:
         # Set up kubeconfig
         print("Updating kubeconfig...")
-        run_cmd(f"aws eks update-kubeconfig --name {cluster_name} --region {region}")
+        run_cmd(f"aws eks update-kubeconfig --name {cluster_name} --region {region} --kubeconfig /tmp/config ")
 
         # Get all namespaces
         print("Fetching namespaces...")
