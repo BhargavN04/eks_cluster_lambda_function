@@ -1,6 +1,34 @@
 import os
 import subprocess
 import json
+import boto3
+from datetime import datetime
+
+s3_client = boto3.client("s3")
+
+import boto3
+from datetime import datetime
+
+s3_client = boto3.client("s3")
+
+def upload_json_to_s3(bucket_name, file_prefix, data):
+    timestamp = datetime.utcnow().strftime("%Y-%m-%dT%H-%M-%S")
+    filename = f"{file_prefix}-{timestamp}.json"
+
+    try:
+        s3_client.put_object(
+            Bucket=bucket_name,
+            Key=filename,
+            Body=json.dumps(data, indent=2),
+            ContentType="application/json",
+            ServerSideEncryption="aws:kms"
+        )
+        print(f"[INFO] Uploaded JSON to S3: s3://{bucket_name}/{filename}")
+        return f"s3://{bucket_name}/{filename}"
+    except Exception as e:
+        print(f"[ERROR] Failed to upload JSON to S3: {e}")
+        raise
+
 
 def run_cmd(cmd):
     debug_cmd = f"set -x; {cmd}"
@@ -19,6 +47,8 @@ def run_cmd(cmd):
 def lambda_handler(event, context):
     region = os.environ.get("AWS_REGION", "us-west-1")
     cluster_name = os.environ.get("CLUSTER_NAME","fabulous-pop-mountain")
+    bucket_name = os.environ.get("S3_BUCKET_NAME")
+    file_prefix = f"{cluster_name}-pod-metrics"
 
     try:
         # Set up kubeconfig
@@ -58,13 +88,15 @@ def lambda_handler(event, context):
                     ns_data["pods"].append(pod_data)
 
             except Exception as e:
-                ns_data["error"] = f"Error fetching pods: {str(e)}"
+                ns_data["error"] = f"Error fetching pods  list : {str(e)}"
 
             response_data.append(ns_data)
+        s3_file_path = upload_json_to_s3(bucket_name, file_prefix, response_data)
 
         return {
             "statusCode": 200,
-            "body": json.dumps(response_data, indent=2)
+            "s3_path": s3_path,
+            "body": "Metrics info updated in the EKS cluster please refer the above file in s3 "
         }
 
     except Exception as e:
