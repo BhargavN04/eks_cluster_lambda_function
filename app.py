@@ -95,7 +95,7 @@ def lambda_handler(event, context):
 
         return {
             "statusCode": 200,
-            "s3_path": s3_path,
+            "s3_path": s3_file_path,
             "body": "Metrics info updated in the EKS cluster please refer the above file in s3 "
         }
 
