@@ -51,6 +51,7 @@ def lambda_handler(event, context):
                     except Exception as e:
                         pod_data = {
                             "pod_name": pod,
+                            "namespace": ns,
                             "error": f"Could not fetch metrics: {str(e)}"
                         }
 
