@@ -6,7 +6,7 @@ def run_cmd(cmd):
     debug_cmd = f"set -x; {cmd}"
     print(f"\n[DEBUG] Running command:\n{cmd}\n")
 
-    result = subprocess.run(debug_cmd, shell=True, capture_output=True, text=True, executable="/bin/bash")
+    result = subprocess.run(debug_cmd, shell=True, capture_output=True, text=True, executable="/bin/bash",env={**os.environ, "KUBECONFIG": "/tmp/config"} )
 
     print(f"[DEBUG] STDOUT:\n{result.stdout.strip()}")
     print(f"[DEBUG] STDERR:\n{result.stderr.strip()}")
