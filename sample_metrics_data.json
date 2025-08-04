@@ -1,0 +1,49 @@
+[
+  {
+    "namespace": "default",
+    "pods": [
+      {
+        "pod_name": "redis-deploy-66f98868f6-vnh5r",
+        "memory_usage": "4Mi"
+      }
+    ]
+  },
+  {
+    "namespace": "demo-apps",
+    "pods": [
+      {
+        "pod_name": "nginx-deploy-c9d9f6c6c-zgr2h",
+        "memory_usage": "2Mi"
+      },
+      {
+        "pod_name": "nginx-deploy-c9d9f6c6c-zw68k",
+        "memory_usage": "3Mi"
+      },
+      {
+        "pod_name": "redis-deploy-66f98868f6-hfjb5",
+        "memory_usage": "4Mi"
+      }
+    ]
+  },
+  {
+    "namespace": "kube-node-lease",
+    "pods": []
+  },
+  {
+    "namespace": "kube-public",
+    "pods": []
+  },
+  {
+    "namespace": "kube-system",
+    "pods": [
+      {
+        "pod_name": "metrics-server-57cfd59df8-qhntb",
+        "memory_usage": "19Mi"
+      },
+      {
+        "pod_name": "metrics-server-57cfd59df8-trjsg",
+        "memory_usage": "19Mi"
+      }
+    ]
+  }
+]
